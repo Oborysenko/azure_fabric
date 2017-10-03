@@ -44,8 +44,8 @@ echo     Parse configuration templates
     sed -e "s/{{PREFIX}}/${PREFIX}/g" crypto-config_template.yaml > crypto-config.yaml
     sed -e "s/{{PREFIX}}/${PREFIX}/g" configtx_template.yaml > configtx.yaml
 
-    sed -e "s/{{.Index}}/${INDEX}/g" crypto-config_template.yaml > crypto-config.yaml
-    sed -e "s/{{.Index}}/${INDEX}/g" configtx_template.yaml > configtx.yaml
+    sed -e "s/{{.Index}}/${INDEX}/g" crypto-config.yaml > crypto-config.yaml
+    sed -e "s/{{.Index}}/${INDEX}/g" configtx.yaml > configtx.yaml
 echo    Generate crypto config
     ./bin/cryptogen generate --config=./crypto-config.yaml
 
