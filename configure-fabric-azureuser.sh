@@ -4,7 +4,7 @@ NODE_TYPE=$1
 AZUREUSER=azureuser
 ARTIFACTS_URL_PREFIX=$3
 NODE_INDEX=$4
-CA_PREFIX=fabric6ie-ca0
+CA_PREFIX=fabric6ie-ca
 CA_NUM=$6
 ORDERER_PREFIX=$7
 ORDERER_NUM=$8
@@ -173,14 +173,3 @@ case "${NODE_TYPE}" in
     exit 1
     ;;
 esac
-© 2017 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-API
-Training
-Shop
-Blog
