@@ -67,6 +67,7 @@ function get_artifacts {
 }
 
 function distribute_ssh_key {
+#TODO: Change distributing logic 
     echo "Generating ssh key..."
 
     # Generate new ssh key pair
@@ -82,6 +83,7 @@ function distribute_ssh_key {
 }
 
 function get_ssh_key {
+#TODO: Change distributing logic 
     echo "Retrieving ssh key..."
 
     # Get the ssh key from the first CA host
@@ -155,16 +157,16 @@ function install_peer {
 case "${NODE_TYPE}" in
 "ca")
     generate_artifacts
-    distribute_ssh_key
+#    distribute_ssh_key
 #    install_ca
     ;;
 "orderer")
-    get_ssh_key
+#    get_ssh_key
     get_artifacts
 #    install_orderer
     ;;
 "peer")
-    get_ssh_key
+#    get_ssh_key
     get_artifacts
 #    install_peer
     ;;
