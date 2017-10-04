@@ -152,6 +152,7 @@ function install_peer {
         -e CORE_PEER_LOCALMSPID=Org1MSP \
         -e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
         -v /var/run:/host/var/run \
+        -v $HOME/channel.tx:/etc/hyperledger/fabric/channel.tx \
         -v $HOME/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
         -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}${NODE_INDEX}.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
         hyperledger/fabric-peer:${FABRIC_VERSION} peer node start --peer-defaultchain=false
