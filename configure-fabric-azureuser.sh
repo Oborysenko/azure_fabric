@@ -10,8 +10,8 @@ ORDERER_PREFIX=$7
 ORDERER_NUM=$8
 PEER_PREFIX=$9
 PEER_NUM=${10}
-CA_USER=${11}
-CA_PASSWORD=${12}
+CA_USER=ca_user
+CA_PASSWORD=ca_password
 PREFIX=fabric6ie
 INDEX=0
 ARCH=linux-amd64
@@ -162,7 +162,7 @@ case "${NODE_TYPE}" in
 "ca")
     generate_artifacts
 #    distribute_ssh_key
-#    install_ca
+    install_ca
     ;;
 "orderer")
 #    get_ssh_key
