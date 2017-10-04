@@ -175,7 +175,7 @@ case "${NODE_TYPE}" in
 "peer")
 #    get_ssh_key
     get_artifacts
-#    install_peer
+    install_peer
     ;;
 "*")
     echo "Invalid node type, exiting."
