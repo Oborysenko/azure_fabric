@@ -133,7 +133,7 @@ function install_orderer {
         -e ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 \
         -v $HOME/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
         -v $HOME/orderer.block:/var/hyperledger/orderer/orderer.block \
-        -v $HOME/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}0.${ORDERER_ORG_DOMAIN}:/var/hyperledger/orderer/msp \
+        -v $HOME/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}0.${ORDERER_ORG_DOMAIN}:/var/hyperledger/orderer \
         hyperledger/fabric-orderer:${FABRIC_VERSION} orderer
 }
 
