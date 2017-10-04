@@ -69,7 +69,7 @@ function get_artifacts {
     scp -o StrictHostKeyChecking=no "${CA_PREFIX}0:~/channel.tx" .
     scp -o StrictHostKeyChecking=no -r "${CA_PREFIX}0:~/crypto-config" .
     sudo chown $USER.$USER ~/configtx.yaml ~/orderer.block ~/channel.tx
-    sudo chown -r $USER.$USER ~/crypto-config
+#    sudo chown -r $USER.$USER ~/crypto-config
 }
 
 function distribute_ssh_key {
@@ -169,7 +169,7 @@ case "${NODE_TYPE}" in
 "orderer")
 #    get_ssh_key
     get_artifacts
-#    install_orderer
+    install_orderer
     ;;
 "peer")
 #    get_ssh_key
