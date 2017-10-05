@@ -179,7 +179,7 @@ function install_cli {
         -v /var/run:/host/var/run \
         -v $HOME/channel.tx:/etc/hyperledger/fabric/channel.tx \
         -v $HOME/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
-        -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}${NODE_INDEX}.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
+        -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}0.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
         -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/users/Admin@${PEER_ORG_DOMAIN}/msp:/etc/hyperledger/fabric/users/msp \
         hyperledger/fabric-tools:${FABRIC_VERSION} sleep 40000
 }
