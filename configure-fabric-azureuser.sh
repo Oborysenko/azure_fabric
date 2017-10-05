@@ -181,6 +181,7 @@ function install_cli {
         -v $HOME/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
         -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}0.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
         -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/users/Admin@${PEER_ORG_DOMAIN}/msp:/etc/hyperledger/fabric/users/msp \
+        -v $HOME/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}0.${ORDERER_ORG_DOMAIN}:/etc/hyperledger/orderer \
         hyperledger/fabric-tools:${FABRIC_VERSION} sleep 40000
 }
 
