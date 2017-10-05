@@ -159,6 +159,31 @@ function install_peer {
         hyperledger/fabric-peer:${FABRIC_VERSION} peer node start --peer-defaultchain=false
 }
 
+function install_cli {
+    echo "Installing Client..."
+
+    # Pull Docker image
+    docker pull hyperledger/fabric-tools:${FABRIC_VERSION}
+
+    # Start Client
+    docker run -d --restart=always -p 3080:80 \
+        -e CORE_PEER_ID=cli \
+        -e CORE_PEER_ADDRESS=fabric6ie-peer0:7051 \
+        -e CORE_PEER_LOCALMSPID=Org1MSP \
+        -e CORE_PEER_TLS_ENABLED="true" \
+        -e CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/msp/sampleconfig/tls/server.crt \
+        -e CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/msp/sampleconfig/tls/server.key \
+        -e CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/msp/sampleconfig/tls/ca.crt \
+        -e CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/users/msp \
+        -e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
+        -v /var/run:/host/var/run \
+#        -v $HOME/channel.tx:/etc/hyperledger/fabric/channel.tx \
+#        -v $HOME/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
+        -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}${NODE_INDEX}.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
+        -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/users/Admin@${PEER_ORG_DOMAIN}/msp:/etc/hyperledger/fabric/users/msp \
+        hyperledger/fabric-tools:${FABRIC_VERSION} sleep 40000
+}
+
 
 # Jump to node-specific steps
 
@@ -177,6 +202,10 @@ case "${NODE_TYPE}" in
 #    get_ssh_key
     get_artifacts
     install_peer
+    ;;
+"cli")
+#    get_artifacts
+    install_cli
     ;;
 "*")
     echo "Invalid node type, exiting."
