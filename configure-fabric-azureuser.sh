@@ -177,8 +177,8 @@ function install_cli {
         -e CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/users/msp \
         -e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
         -v /var/run:/host/var/run \
-#        -v $HOME/channel.tx:/etc/hyperledger/fabric/channel.tx \
-#        -v $HOME/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
+        -v $HOME/channel.tx:/etc/hyperledger/fabric/channel.tx \
+        -v $HOME/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
         -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}${NODE_INDEX}.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
         -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/users/Admin@${PEER_ORG_DOMAIN}/msp:/etc/hyperledger/fabric/users/msp \
         hyperledger/fabric-tools:${FABRIC_VERSION} sleep 40000
