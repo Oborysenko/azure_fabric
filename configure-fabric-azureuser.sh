@@ -34,7 +34,9 @@ function generate_artifacts {
     echo Retrieve tools
     # TODO: download less stuff?
 
-    curl -qL https://nexus.hyperledger.org/content/repositories/releases/org/hyperledger/fabric/hyperledger-fabric/${ARCH}-${VERSION}/hyperledger-fabric-${ARCH}-${VERSION}.tar.gz  -o release.tar.gz
+    if [ ! -f ./release.tar.gz ]; then
+        curl -qL https://nexus.hyperledger.org/content/repositories/releases/org/hyperledger/fabric/hyperledger-fabric/${ARCH}-${VERSION}/hyperledger-fabric-${ARCH}-${VERSION}.tar.gz  -o release.tar.gz
+    fi
     tar -xvf release.tar.gz
 
     # Set up environment
