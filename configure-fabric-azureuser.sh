@@ -67,10 +67,10 @@ function get_artifacts {
     echo "Retrieving network artifacts..."
 
     # Copy the artifacts from the first CA host
-    scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/configtx.yaml" .
-    scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/orderer.block" .
-    scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/channel.tx" .
-    scp -o StrictHostKeyChecking=no -r "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/crypto-config" .
+    scp -i ./.ssh/fabric_ca.key -o StrictHostKeyChecking=no "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/configtx.yaml" .
+    scp -i ./.ssh/fabric_ca.key -o StrictHostKeyChecking=no "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/orderer.block" .
+    scp -i ./.ssh/fabric_ca.key -o StrictHostKeyChecking=no "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/channel.tx" .
+    scp -i ./.ssh/fabric_ca.key -o StrictHostKeyChecking=no -r "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/crypto-config" .
     sudo chown $USER.$USER ~/${ARTIFACTS_URL_PREFIX}/configtx.yaml ~/${ARTIFACTS_URL_PREFIX}/orderer.block ~/${ARTIFACTS_URL_PREFIX}/channel.tx
 #    sudo chown -r $USER.$USER ~/crypto-config
 }
