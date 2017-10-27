@@ -5,11 +5,11 @@ AZUREUSER=azureuser
 ARTIFACTS_URL_PREFIX=fabric
 NODE_INDEX=$2
 CA_PREFIX=fabric-ca_host
-ORDERER_PREFIX=orderer_host
+ORDERER_PREFIX=fabric-orderer
 PEER_PREFIX=fabric-peer
 CA_USER=ca_user
 CA_PASSWORD=ca_password
-PREFIX=fabric6ie
+PREFIX=fabric
 INDEX=0
 ARCH=linux-amd64
 VERSION=1.0.2
@@ -67,7 +67,7 @@ function get_artifacts {
     echo "Retrieving network artifacts..."
 
     # Copy the artifacts from the first CA host
-    scp -o StrictHostKeyChecking=no User=fabricusr "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/configtx.yaml" .
+    scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/configtx.yaml" .
     scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/orderer.block" .
     scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/channel.tx" .
     scp -o StrictHostKeyChecking=no -r "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/crypto-config" .
