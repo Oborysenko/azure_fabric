@@ -2,9 +2,9 @@
 
 NODE_TYPE=$1
 AZUREUSER=azureuser
-ARTIFACTS_URL_PREFIX=$3
+ARTIFACTS_URL_PREFIX=fabric
 NODE_INDEX=$2
-CA_PREFIX=fabric6ie-ca
+CA_PREFIX=ip-172-31-24-129
 ORDERER_PREFIX=fabric6ie-orderer
 PEER_PREFIX=fabric6ie-peer
 CA_USER=ca_user
@@ -65,11 +65,11 @@ function get_artifacts {
     echo "Retrieving network artifacts..."
 
     # Copy the artifacts from the first CA host
-    scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/configtx.yaml" .
-    scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/orderer.block" .
-    scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/channel.tx" .
-    scp -o StrictHostKeyChecking=no -r "${CA_PREFIX}:~/crypto-config" .
-    sudo chown $USER.$USER ~/configtx.yaml ~/orderer.block ~/channel.tx
+    scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/configtx.yaml" .
+    scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/orderer.block" .
+    scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/channel.tx" .
+    scp -o StrictHostKeyChecking=no -r "${CA_PREFIX}:~/${ARTIFACTS_URL_PREFIX}/crypto-config" .
+    sudo chown $USER.$USER ~/${ARTIFACTS_URL_PREFIX}/configtx.yaml ~/${ARTIFACTS_URL_PREFIX}/orderer.block ~/${ARTIFACTS_URL_PREFIX}/channel.tx
 #    sudo chown -r $USER.$USER ~/crypto-config
 }
 
@@ -113,7 +113,7 @@ function install_ca {
 
     # Start CA
     sudo docker run -d --restart=always -p 7054:7054 \
-        -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/ca:/etc/hyperledger/fabric-ca-server-config \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/ca:/etc/hyperledger/fabric-ca-server-config \
         hyperledger/fabric-ca:${FABRIC_VERSION} fabric-ca-server start --ca.certfile $cacert --ca.keyfile $cakey -b "${CA_USER}":"${CA_PASSWORD}"
 }
 
@@ -132,9 +132,9 @@ function install_orderer {
         -e ORDERER_GENERAL_GENESISPROFILE=TwoOrgs \
         -e ORDERER_GENERAL_LOGLEVEL=debug \
         -e ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 \
-        -v $HOME/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
-        -v $HOME/orderer.block:/var/hyperledger/orderer/orderer.block \
-        -v $HOME/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}.${ORDERER_ORG_DOMAIN}:/var/hyperledger/orderer \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/orderer.block:/var/hyperledger/orderer/orderer.block \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}.${ORDERER_ORG_DOMAIN}:/var/hyperledger/orderer \
         hyperledger/fabric-orderer:${FABRIC_VERSION} orderer
 }
 
@@ -153,9 +153,9 @@ function install_peer {
         -e CORE_PEER_LOCALMSPID=Org1MSP \
         -e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
         -v /var/run:/host/var/run \
-        -v $HOME/channel.tx:/etc/hyperledger/fabric/channel.tx \
-        -v $HOME/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
-        -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}${NODE_INDEX}.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/channel.tx:/etc/hyperledger/fabric/channel.tx \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}${NODE_INDEX}.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
         hyperledger/fabric-peer:${FABRIC_VERSION} peer node start --peer-defaultchain=false
 }
 
@@ -177,11 +177,11 @@ function install_cli {
         -e CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/users/msp \
         -e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
         -v /var/run:/host/var/run \
-        -v $HOME/channel.tx:/etc/hyperledger/fabric/channel.tx \
-        -v $HOME/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
-        -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}0.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
-        -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/users/Admin@${PEER_ORG_DOMAIN}/msp:/etc/hyperledger/fabric/users/msp \
-        -v $HOME/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}.${ORDERER_ORG_DOMAIN}:/etc/hyperledger/orderer \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/channel.tx:/etc/hyperledger/fabric/channel.tx \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}0.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/users/Admin@${PEER_ORG_DOMAIN}/msp:/etc/hyperledger/fabric/users/msp \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}.${ORDERER_ORG_DOMAIN}:/etc/hyperledger/orderer \
         hyperledger/fabric-tools:${FABRIC_VERSION} sleep 40000
 }
 
