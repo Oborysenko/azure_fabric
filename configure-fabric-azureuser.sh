@@ -136,7 +136,7 @@ function install_orderer {
         -e ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/orderer.block:/var/hyperledger/orderer/orderer.block \
-        -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}.${ORDERER_ORG_DOMAIN}:/var/hyperledger/orderer \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}0.${ORDERER_ORG_DOMAIN}:/var/hyperledger/orderer \
         hyperledger/fabric-orderer:${FABRIC_VERSION} orderer
 }
 
@@ -183,7 +183,7 @@ function install_cli {
         -v $HOME/${ARTIFACTS_URL_PREFIX}/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}0.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/users/Admin@${PEER_ORG_DOMAIN}/msp:/etc/hyperledger/fabric/users/msp \
-        -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}.${ORDERER_ORG_DOMAIN}:/etc/hyperledger/orderer \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}0.${ORDERER_ORG_DOMAIN}:/etc/hyperledger/orderer \
         hyperledger/fabric-tools:${FABRIC_VERSION} sleep 40000
 }
 
