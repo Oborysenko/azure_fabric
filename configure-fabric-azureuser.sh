@@ -18,7 +18,7 @@ VERSION=1.0.2
 #CA_NUM=
 #ORDERER_NUM=
 
-FABRIC_VERSION=x86_64-1.0.2
+FABRIC_VERSION=x86_64-1.0.3
 
 # TODO: extract those from the configuration
 PEER_ORG_DOMAIN="org1.triangu.com"
@@ -34,7 +34,7 @@ function generate_artifacts {
     echo Retrieve tools
     # TODO: download less stuff?
 
-#    curl -qL https://nexus.hyperledger.org/content/repositories/releases/org/hyperledger/fabric/hyperledger-fabric/${ARCH}-${VERSION}/hyperledger-fabric-${ARCH}-${VERSION}.tar.gz  -o release.tar.gz
+    curl -qL https://nexus.hyperledger.org/content/repositories/releases/org/hyperledger/fabric/hyperledger-fabric/${ARCH}-${VERSION}/hyperledger-fabric-${ARCH}-${VERSION}.tar.gz  -o release.tar.gz
     tar -xvf release.tar.gz
 
     # Set up environment
@@ -65,10 +65,10 @@ function get_artifacts {
     echo "Retrieving network artifacts..."
 
     # Copy the artifacts from the first CA host
-    scp -o StrictHostKeyChecking=no "${CA_PREFIX}0:~/configtx.yaml" .
-    scp -o StrictHostKeyChecking=no "${CA_PREFIX}0:~/orderer.block" .
-    scp -o StrictHostKeyChecking=no "${CA_PREFIX}0:~/channel.tx" .
-    scp -o StrictHostKeyChecking=no -r "${CA_PREFIX}0:~/crypto-config" .
+    scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/configtx.yaml" .
+    scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/orderer.block" .
+    scp -o StrictHostKeyChecking=no "${CA_PREFIX}:~/channel.tx" .
+    scp -o StrictHostKeyChecking=no -r "${CA_PREFIX}:~/crypto-config" .
     sudo chown $USER.$USER ~/configtx.yaml ~/orderer.block ~/channel.tx
 #    sudo chown -r $USER.$USER ~/crypto-config
 }
@@ -95,7 +95,7 @@ function get_ssh_key {
 
     # Get the ssh key from the first CA host
     # TODO: loop here waiting for the request to succeed, instead of sequencing via the template dependencies?
-    curl "http://${CA_PREFIX}0:1515/" -o ~/.ssh/id_rsa || exit 1
+    curl "http://${CA_PREFIX}:1515/" -o ~/.ssh/id_rsa || exit 1
 
     # Fix permissions
     chmod 700 ~/.ssh
@@ -109,10 +109,10 @@ function install_ca {
     cakey="/etc/hyperledger/fabric-ca-server-config/$(basename crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/ca/*_sk)"
 
     # Pull Docker image
-    docker pull hyperledger/fabric-ca:${FABRIC_VERSION}
+    sudo docker pull hyperledger/fabric-ca:${FABRIC_VERSION}
 
     # Start CA
-    docker run -d --restart=always -p 7054:7054 \
+    sudo docker run -d --restart=always -p 7054:7054 \
         -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/ca:/etc/hyperledger/fabric-ca-server-config \
         hyperledger/fabric-ca:${FABRIC_VERSION} fabric-ca-server start --ca.certfile $cacert --ca.keyfile $cakey -b "${CA_USER}":"${CA_PASSWORD}"
 }
@@ -121,10 +121,10 @@ function install_orderer {
     echo "Installing Orderer..."
 
     # Pull Docker image
-    docker pull hyperledger/fabric-orderer:${FABRIC_VERSION}
+    sudo docker pull hyperledger/fabric-orderer:${FABRIC_VERSION}
 
     # Start Orderer
-    docker run -d --restart=always -p 7050:7050 \
+    sudo docker run -d --restart=always -p 7050:7050 \
         -e ORDERER_GENERAL_GENESISMETHOD=file \
         -e ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.block \
         -e ORDERER_GENERAL_LOCALMSPID=OrdererMSP \
@@ -134,7 +134,7 @@ function install_orderer {
         -e ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 \
         -v $HOME/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
         -v $HOME/orderer.block:/var/hyperledger/orderer/orderer.block \
-        -v $HOME/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}0.${ORDERER_ORG_DOMAIN}:/var/hyperledger/orderer \
+        -v $HOME/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}.${ORDERER_ORG_DOMAIN}:/var/hyperledger/orderer \
         hyperledger/fabric-orderer:${FABRIC_VERSION} orderer
 }
 
@@ -142,13 +142,13 @@ function install_peer {
     echo "Installing Peer..."
 
     # Pull Docker image
-    docker pull hyperledger/fabric-peer:${FABRIC_VERSION}
+    sudo docker pull hyperledger/fabric-peer:${FABRIC_VERSION}
 
     # The Peer needs this image to cerate chaincode containers
-    docker pull hyperledger/fabric-ccenv:${FABRIC_VERSION}
+    sudo docker pull hyperledger/fabric-ccenv:${FABRIC_VERSION}
 
     # Start Peer
-    docker run -d --restart=always -p 7051:7051 -p 7053:7053 \
+    sudo docker run -d --restart=always -p 7051:7051 -p 7053:7053 \
         -e CORE_PEER_ID=${PEER_PREFIX}${NODE_INDEX}.${PEER_ORG_DOMAIN} \
         -e CORE_PEER_LOCALMSPID=Org1MSP \
         -e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
@@ -163,10 +163,10 @@ function install_cli {
     echo "Installing Client..."
 
     # Pull Docker image
-    docker pull hyperledger/fabric-tools:${FABRIC_VERSION}
+    sudo docker pull hyperledger/fabric-tools:${FABRIC_VERSION}
 
     # Start Client
-    docker run -d --restart=always -p 3080:80 \
+    sudo docker run -d --restart=always -p 3080:80 \
         -e CORE_PEER_ID=cli \
         -e CORE_PEER_ADDRESS=fabric6ie-peer0:7051 \
         -e CORE_PEER_LOCALMSPID=Org1MSP \
@@ -181,7 +181,7 @@ function install_cli {
         -v $HOME/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
         -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}0.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
         -v $HOME/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/users/Admin@${PEER_ORG_DOMAIN}/msp:/etc/hyperledger/fabric/users/msp \
-        -v $HOME/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}0.${ORDERER_ORG_DOMAIN}:/etc/hyperledger/orderer \
+        -v $HOME/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}.${ORDERER_ORG_DOMAIN}:/etc/hyperledger/orderer \
         hyperledger/fabric-tools:${FABRIC_VERSION} sleep 40000
 }
 
