@@ -186,7 +186,7 @@ function install_cli {
         -e CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/msp/sampleconfig/tls/ca.crt \
         -e CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/users/msp \
         -e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
-        -e ORDERER_CA=/etc/hyperledger/orderer/msp/tlscacerts/tlsca.triangu.com-cert.pem
+        -e ORDERER_CA=/etc/hyperledger/orderer/msp/tlscacerts/tlsca.triangu.com-cert.pem \
         -v /var/run:/host/var/run \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/channel.tx:/etc/hyperledger/fabric/channel.tx \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
