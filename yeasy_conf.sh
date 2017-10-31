@@ -45,11 +45,14 @@ function generate_artifacts {
     export FABRIC_CFG_PATH=$PWD
 
 echo     Parse configuration templates
-    sed -e "s/{{PREFIX}}/${PREFIX}/g" crypto-config_template.yaml > crypto-config_tmp.yaml
-    sed -e "s/{{PREFIX}}/${PREFIX}/g" configtx_template.yaml > configtx_tmp.yaml
+#    sed -e "s/{{PREFIX}}/${PREFIX}/g" crypto-config_template.yaml > crypto-config_tmp.yaml
+#    sed -e "s/{{PREFIX}}/${PREFIX}/g" configtx_template.yaml > configtx_tmp.yaml
 
-    sed -e "s/{{.Index}}/${INDEX}/g" crypto-config_tmp.yaml > crypto-config.yaml
-    sed -e "s/{{.Index}}/${INDEX}/g" configtx_tmp.yaml > configtx.yaml
+    sed -e "s/{{PREFIX}}/${PREFIX}/g" crypto-config_template.yaml > crypto-config.yaml
+    sed -e "s/{{PREFIX}}/${PREFIX}/g" configtx_template.yaml > configtx.yaml
+
+#    sed -e "s/{{.Index}}/${INDEX}/g" crypto-config_tmp.yaml > crypto-config.yaml
+#    sed -e "s/{{.Index}}/${INDEX}/g" configtx_tmp.yaml > configtx.yaml
     
     rm crypto-config_tmp.yaml
     rm configtx_tmp.yaml
