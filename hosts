@@ -1,0 +1,15 @@
+127.0.0.1 localhost
+172.31.24.129 fabric-ca_host
+172.31.24.129 fabric-orderer0
+172.31.16.75 fabric-peer0
+172.31.19.219 fabric-peer1
+172.31.17.203 fabric-peer2
+172.31.18.151 fabric-peer3
+
+# The following lines are desirable for IPv6 capable hosts
+::1 ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+ff02::3 ip6-allhosts
