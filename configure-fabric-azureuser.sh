@@ -13,6 +13,7 @@ PREFIX=fabric
 INDEX=0
 ARCH=linux-amd64
 VERSION=1.0.2
+IS_TLS_ENABLED=false
 
 #PEER_NUM=
 #CA_NUM=
@@ -116,7 +117,10 @@ function install_ca {
     # Start CA
     sudo docker run -d --restart=always -p 7054:7054 \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/ca:/etc/hyperledger/fabric-ca-server-config \
-        hyperledger/fabric-ca:${FABRIC_VERSION} fabric-ca-server start --ca.certfile $cacert --ca.keyfile $cakey -b "${CA_USER}":"${CA_PASSWORD}"
+        hyperledger/fabric-ca:${FABRIC_VERSION} fabric-ca-server start \
+        --ca.certfile $cacert \
+        --ca.keyfile $cakey \
+        -b "${CA_USER}":"${CA_PASSWORD}"
 }
 
 function install_orderer {
@@ -134,6 +138,7 @@ function install_orderer {
         -e ORDERER_GENERAL_GENESISPROFILE=TwoOrgs \
         -e ORDERER_GENERAL_LOGLEVEL=debug \
         -e ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 \
+        -e ORDERER_GENERAL_TLS_ENABLED=$IS_TLS_ENABLED \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/orderer.block:/var/hyperledger/orderer/orderer.block \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}0.${ORDERER_ORG_DOMAIN}:/var/hyperledger/orderer \
@@ -154,6 +159,7 @@ function install_peer {
         -e CORE_PEER_ID=${PEER_PREFIX}${NODE_INDEX}.${PEER_ORG_DOMAIN} \
         -e CORE_PEER_LOCALMSPID=Org1MSP \
         -e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
+        -e CORE_PEER_TLS_ENABLED=${IS_TLS_ENABLED} \
         -v /var/run:/host/var/run \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/channel.tx:/etc/hyperledger/fabric/channel.tx \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
@@ -172,7 +178,7 @@ function install_cli {
         -e CORE_PEER_ID=cli \
         -e CORE_PEER_ADDRESS=fabric6ie-peer0:7051 \
         -e CORE_PEER_LOCALMSPID=Org1MSP \
-        -e CORE_PEER_TLS_ENABLED="true" \
+        -e CORE_PEER_TLS_ENABLED="${IS_TLS_ENABLED}" \
         -e CORE_PEER_TLS_CERT_FILE=/etc/hyperledger/fabric/msp/sampleconfig/tls/server.crt \
         -e CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/msp/sampleconfig/tls/server.key \
         -e CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/msp/sampleconfig/tls/ca.crt \
