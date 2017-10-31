@@ -8,3 +8,4 @@ sudo rm -rf ./crypto-config ./configtx.yaml ./orderer.block ./channel.tx ./crypt
 cd ~/fabric/ && git pull && cp -r ./* ../ && cd ~/
 chmod +x ~/fabric/redeploy.sh
 chmod +x ~/fabric/configure-fabric-azureuser.sh
+chmod +x ~/fabric/yeasy_conf.sh
