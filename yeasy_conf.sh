@@ -117,6 +117,7 @@ function install_ca {
     # Start CA
     sudo docker run -d --restart=always -p 7054:7054 \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/ca:/etc/hyperledger/fabric-ca-server-config \
+        -v /etc/hosts:/etc/hosts \
         hyperledger/fabric-ca:${FABRIC_VERSION} fabric-ca-server start \
         --ca.certfile $cacert \
         --ca.keyfile $cakey \
@@ -142,6 +143,7 @@ function install_orderer {
         -v $HOME/${ARTIFACTS_URL_PREFIX}/orderer.block:/var/hyperledger/orderer/orderer.block \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}0.${ORDERER_ORG_DOMAIN}/msp:/var/hyperledger/orderer/msp \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}0.${ORDERER_ORG_DOMAIN}/tls:/var/hyperledger/orderer/tls \
+        -v /etc/hosts:/etc/hosts \
         hyperledger/fabric-orderer:${FABRIC_VERSION} orderer
 }
 
@@ -166,6 +168,7 @@ function install_peer {
         -v $HOME/${ARTIFACTS_URL_PREFIX}/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}${NODE_INDEX}.${PEER_ORG_DOMAIN}/msp:/etc/hyperledger/fabric/msp \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}${NODE_INDEX}.${PEER_ORG_DOMAIN}/tls:/etc/hyperledger/fabric/tls \
+        -v /etc/hosts:/etc/hosts \
         hyperledger/fabric-peer:${FABRIC_VERSION} peer node start --peer-defaultchain=false
 }
 
@@ -194,6 +197,7 @@ function install_cli {
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}0.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/users/Admin@${PEER_ORG_DOMAIN}/msp:/etc/hyperledger/fabric/users/msp \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}0.${ORDERER_ORG_DOMAIN}:/etc/hyperledger/orderer \
+        -v /etc/hosts:/etc/hosts \
         hyperledger/fabric-tools:${FABRIC_VERSION} sleep 40000
 }
 
