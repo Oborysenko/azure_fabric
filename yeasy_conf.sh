@@ -201,6 +201,7 @@ function install_cli {
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/users/Admin@${PEER_ORG_DOMAIN}/msp:/etc/hyperledger/fabric/users/msp \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/ordererOrganizations/${ORDERER_ORG_DOMAIN}/orderers/${ORDERER_PREFIX}0.${ORDERER_ORG_DOMAIN}:/etc/hyperledger/orderer \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/hosts:/etc/hosts \
+        -v $HOME/${ARTIFACTS_URL_PREFIX}/chaincode_example02.go:/etc/hyperledger/fabric/chaincode_example02.go \
         hyperledger/fabric-tools:${FABRIC_VERSION} sleep 40000
 }
 
