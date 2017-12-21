@@ -161,7 +161,7 @@ function install_peer {
         -e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
         -e CORE_PEER_TLS_ENABLED=${IS_TLS_ENABLED} \
         -v /var/run:/host/var/run \
-        -v /etc/hosts:/etc/hosts
+        -v /etc/hosts:/etc/hosts \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/channel.tx:/etc/hyperledger/fabric/channel.tx \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}${NODE_INDEX}.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
