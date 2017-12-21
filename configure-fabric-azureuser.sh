@@ -115,7 +115,7 @@ function install_ca {
     sudo docker pull hyperledger/fabric-ca:${FABRIC_VERSION}
 
     # Start CA
-    sudo docker run -d --restart=always -p 7054:7054 \
+    sudo docker run -d --restart=always -p 7054:7054 --name ca \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/ca:/etc/hyperledger/fabric-ca-server-config \
         hyperledger/fabric-ca:${FABRIC_VERSION} fabric-ca-server start \
         --ca.certfile $cacert \
@@ -130,7 +130,7 @@ function install_orderer {
     sudo docker pull hyperledger/fabric-orderer:${FABRIC_VERSION}
 
     # Start Orderer
-    sudo docker run -d --restart=always -p 7050:7050 \
+    sudo docker run -d --restart=always -p 7050:7050 --name orderer\
         -e ORDERER_GENERAL_GENESISMETHOD=file \
         -e ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.block \
         -e ORDERER_GENERAL_LOCALMSPID=OrdererMSP \
@@ -155,12 +155,13 @@ function install_peer {
     sudo docker pull hyperledger/fabric-ccenv:${FABRIC_VERSION}
 
     # Start Peer
-    sudo docker run -d --restart=always -p 7051:7051 -p 7053:7053 \
+    sudo docker run -d --restart=always -p 7051:7051 -p 7053:7053 --name ${PEER_PREFIX}${NODE_INDEX}.${PEER_ORG_DOMAIN}\
         -e CORE_PEER_ID=${PEER_PREFIX}${NODE_INDEX}.${PEER_ORG_DOMAIN} \
         -e CORE_PEER_LOCALMSPID=Org1MSP \
         -e CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock \
         -e CORE_PEER_TLS_ENABLED=${IS_TLS_ENABLED} \
         -v /var/run:/host/var/run \
+        -v /etc/hosts:/etc/hosts
         -v $HOME/${ARTIFACTS_URL_PREFIX}/channel.tx:/etc/hyperledger/fabric/channel.tx \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/configtx.yaml:/etc/hyperledger/fabric/configtx.yaml \
         -v $HOME/${ARTIFACTS_URL_PREFIX}/crypto-config/peerOrganizations/${PEER_ORG_DOMAIN}/peers/${PEER_PREFIX}${NODE_INDEX}.${PEER_ORG_DOMAIN}:/etc/hyperledger/fabric/msp/sampleconfig \
